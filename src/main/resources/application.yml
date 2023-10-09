@@ -1,0 +1,28 @@
+spring:
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/currency_converter
+    username: root
+    password: Admin@123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      show-sql=true:
+
+
+
+
+#server:
+#  servlet:
+#    context-path: /CurrencyConverter
+server:
+  port: 9090
+
+
+
