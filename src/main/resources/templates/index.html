@@ -14,16 +14,17 @@
         <input type="text" id="toCurrency" name="toCurrency" required>
 
         <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" required>
+        <input type="text" id="amount" name="amount" >
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
 
         <button type="submit">Convert</button>
     </form>
     <div th:if="${result}">
         <p th:text="'Conversion Result: ' + ${result}"></p>
+<!--        <button type="submit">send</button>-->
     </div>
     </body>
     </html>
 
-</form>
-</body>
-</html>
