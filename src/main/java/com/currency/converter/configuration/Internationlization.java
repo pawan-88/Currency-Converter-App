@@ -16,7 +16,7 @@ public class Internationlization implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver(){
         CookieLocaleResolver sessionLocaleResolver = new CookieLocaleResolver();
-        sessionLocaleResolver.setDefaultLocale(Locale.ENGLISH);
+        sessionLocaleResolver.setDefaultLocale(Locale.US);
         sessionLocaleResolver.setCookieName("local-cookie");
         sessionLocaleResolver.setCookieMaxAge(4800);
         return sessionLocaleResolver;

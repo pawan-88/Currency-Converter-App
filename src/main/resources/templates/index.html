@@ -3,62 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="#{app.currency}">Currency Converter App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('https://example.com/your-image.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow for better visibility */
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        label, select, input, button {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="#{app.currency}">Currency Converter</h1>
+<div class="container mt-5">
+    <h1 class="text-primary" th:text="#{app.currency}">Currency Converter</h1>
 
-<!-- Language dropdown -->
-<label for="locale">Language:</label>
-<select name="locale" id="locale" onchange="changeLocale(this);">
-    <option value="en" >English</option>
-    <option value="fr">French</option>
-<!--    <option value="hi">Hindi</option>-->
-    <option value="nl">Dutch</option>
-    <option value="it">Italian</option>
-<!--    <option value="bn">Bengali</option>-->
-</select>
+    <!-- Language dropdown -->
+    <div class="form-group">
+        <label for="locale" th:text="#{label.language}">Language:</label>
+        <select class="form-control" name="locale" id="locale" onchange="changeLanguage(this);">
+            <option value="hi" th:text="#{switch-hi}" disabled>Hindi</option>
+            <option value="fr" th:text="#{switch-fr}">French</option>
+<!--            <option value="hi" th:text="#{switch-hi}">Hindi</option>-->
+            <option value="nl" th:text="#{switch-nl}">Dutch</option>
+            <option value="it" th:text="#{switch-it}">Italian</option>
+            <option value="en" th:text="#{switch-en}">English</option>
+        </select>
+    </div>
 
-<!--<select name="locale" id="locale" onchange="changeLocale(this);">-->
-<!--    <option value="en" th:text="#{switch-en}" selected>Switch to English</option>-->
-<!--    <option value="fr" th:text="#{switch-fr}">Switch to French</option>-->
-<!--&lt;!&ndash;    <option value="hi" th:text="#{switch-hi}">Switch to Hindi</option>&ndash;&gt;-->
-<!--</select>-->
+    <form th:action="@{/currency-conversion}" method="get">
 
-<br><br>
-<form th:action="@{/currency-conversion}" method="get">
-    <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>
-    <input type="text" id="fromCurrency" name="fromCurrency" required>
+        <div class="alert alert-danger" id="networkError" style="display: none;">
+            Network error. Please try again later.
+        </div>
 
-    <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>
-    <input type="text" id="toCurrency" name="toCurrency" required>
+        <!--        <div class="form-group">-->
+<!--            <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>-->
+<!--            <input type="text" class="form-control" id="fromCurrency" name="fromCurrency" required>-->
+<!--        </div>-->
 
-    <label for="amount" th:text="#{label.amount}">Amount:</label>
-    <input type="text" id="amount" name="amount">
+<!--        <div class="form-group">-->
+<!--            <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>-->
+<!--            <input type="text" class="form-control" id="toCurrency" name="toCurrency" required>-->
 
-    <label for="date" th:text="#{label.date}">Date:</label>
-    <input type="date" id="date" name="date">
+<!--        </div>-->
+        <div class="form-group">
+            <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>
+            <input type="text" class="form-control" id="fromCurrency" name="fromCurrency" required>
+        </div>
 
-    <button type="submit" th:text="#{button.convert}">Convert</button>
-</form>
-<br><br>
-<div th:if="${result}">
-    <p th:text="#{div.result}">Conversion Result:</p>
-    <p th:text="' : ' + ${result}"></p>
+        <div class="form-group">
+            <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>
+            <input type="text" class="form-control" id="toCurrency" name="toCurrency" required>
+            <div class="invalid-feedback" style="display: none" id="currencyError">
+                Unsupported currencies
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="amount" th:text="#{label.amount}">Amount:</label>
+            <input type="text" class="form-control" id="amount" name="amount">
+            <div class="invalid-feedback" style="display: none" id="amountError">
+                Invalid input (e.g., a non-numerical value for the currency amount)
+            </div>
+        </div>
+
+        <!--        <div class="form-group">-->
+<!--            <label for= "amount" th:text="#{label.amount}">Amount:</label>-->
+<!--            <input type="text" class="form-control" id="amount" name="amount">-->
+<!--        </div>-->
+
+        <div class="form-group">
+            <label for="date" th:text="#{label.date}">Date:</label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+
+        <button type="submit" class="btn btn-primary" th:text="#{button.convert}">Convert</button>
+    </form>
+
+    <div class="mt-3" id="resultsDiv" style="display: none;">
+        <p th:text="#{label.result}" class="font-weight-bold">Conversion Result:</p>
+        <p id="convertedAmount" class="text-primary"></p>
+    </div>
+
+    <!--    <div class="mt-3" th:if="${result}">-->
+<!--        <p th:text="#{div.result}" class="font-weight-bold">Conversion Result:</p>-->
+<!--        <p th:text="' : ' + ${result}" class="text-primary"></p>-->
+<!--    </div>-->
+
+    <div class="alert alert-danger" id="errorDiv" style="display: none;">
+        <p id="errorMessage"></p>
+    </div>
 </div>
 
-<!--<div th:text="#{div.result}" th:if="${result}">-->
-<!--    <p th:text="'Conversion Result: ' + ${result}"></p>-->
-<!--</div>-->
 <script th:inline="javascript">
-    function changeLocale(selectElement) {
-        var selectedLocale = selectElement.value;
+    function changeLanguage(selectElement) {
+        var selectedLanguage = selectElement.value;
         var currentUrl = window.location.href;
-        var newUrl = currentUrl.replace(/\?lang=\w+/, "?lang=" + selectedLocale);
-        setCookie("local-cookie", selectedLocale, 365);
+        var newUrl = updateQueryStringParameter(currentUrl, "lang", selectedLanguage);
+        setCookie("selectedLanguage", selectedLanguage, 365);
         window.location.href = newUrl;
     }
 
-     function setCookie(name, value, days) {
+    function setCookie(name, value, days) {
         var expires = "";
         if (days) {
             var date = new Date();
@@ -67,7 +132,86 @@
         }
         document.cookie = name + "=" + value + expires + "; path=/";
     }
-</script>
 
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf("?") !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, "$1" + key + "=" + value + "$2");
+        } else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+
+           function showError(errorMessage) {
+               var errorDiv = document.getElementById("errorDiv");
+               var errorMessageElement = document.getElementById("errorMessage");
+               errorMessageElement.innerText = errorMessage;
+               errorDiv.style.display = "block";
+           }
+
+        // JavaScript function to validate the amount input
+    function validateAmount() {
+        var amountInput = document.getElementById("amount");
+        var amountError = document.getElementById("amountError");
+
+        // Check if the input value is not a number
+        if (isNaN(amountInput.value)) {
+            amountInput.classList.add("is-invalid");
+            amountError.style.display = "block";
+        } else {
+            amountInput.classList.remove("is-invalid");
+            amountError.style.display = "none";
+        }
+    }
+
+    // Add an event listener to validate the input on input change
+    document.getElementById("amount").addEventListener("input", validateAmount);
+
+        function validateCurrencies() {
+        var fromCurrencyInput = document.getElementById("fromCurrency");
+        var toCurrencyInput = document.getElementById("toCurrency");
+        var currencyError = document.getElementById("currencyError");
+
+        // Check if the input values are unsupported currencies
+        var supportedCurrencies = ["USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "CNY",
+        "SEK", "NZD", "SGD", "HKD", "NOK", "KRW", "TRY", "INR", "BRL", "ZAR", "RUB",
+         "AED", "SAR", "QAR", "KWD", "OMR", "THB", "IDR", "MYR", "PHP", "MXN", "ARS",
+         "CLP", "COP", "PEN", "EGP", "ILS", "DKK", "HUF", "PLN", "CZK", "RON", "BGN", "HRK",
+         "RSD", "UAH", "HNL", "DOP", "CRC", "CUP", "JMD", "BOB", "PYG", "UYU"];
+
+
+        if (!supportedCurrencies.includes(fromCurrencyInput.value) || !supportedCurrencies.includes(toCurrencyInput.value)) {
+            fromCurrencyInput.classList.add("is-invalid");
+            toCurrencyInput.classList.add("is-invalid");
+            currencyError.style.display = "block";
+        } else {
+            fromCurrencyInput.classList.remove("is-invalid");
+            toCurrencyInput.classList.remove("is-invalid");
+            currencyError.style.display = "none";
+        }
+    }
+
+    document.getElementById("fromCurrency").addEventListener("input", validateCurrencies);
+    document.getElementById("toCurrency").addEventListener("input", validateCurrencies);
+
+
+        function showNetworkError() {
+        var networkError = document.getElementById("networkError");
+        networkError.style.display = "block";
+    }
+        function showResult(result) {
+        var resultsDiv = document.getElementById("resultsDiv");
+        var convertedAmount = document.getElementById("convertedAmount");
+
+        convertedAmount.innerText = result; // Set the converted amount
+        resultsDiv.style.display = "block"; // Show the results div
+    }
+
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

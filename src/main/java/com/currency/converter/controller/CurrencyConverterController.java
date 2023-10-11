@@ -5,6 +5,7 @@ import com.currency.converter.repository.CurrencyConverterRepository;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,34 +101,37 @@ public class CurrencyConverterController {
         return "index";
     }
 
-        @GetMapping("/")
-    public String index(Model model, HttpServletRequest request){
-        model.addAttribute("pageTitle","Currency Converter Application");
-
-        Locale currentLocale = request.getLocale();
-        String countryCode = currentLocale.getCountry();
-        String countryName = currentLocale.getDisplayCountry();
-
-        String langCode = currentLocale.getLanguage();
-        String langName = currentLocale.getDisplayLanguage();
-
-        System.out.println(countryCode + ": "+ countryName);
-        System.out.println(langCode + ": " + langName);
-
-        System.out.println("----------------");
-        String[] language = Locale.getISOLanguages();
-
-        for (String lang : language){
-            Locale locale = new Locale(lang);
-//            System.out.println(lang +":"+locale.getDisplayLanguage());
-        }
-
-        return "index";
-    }
+//        @GetMapping("/")
+//    public String index(Model model, HttpServletRequest request){
+//        model.addAttribute("pageTitle","Currency Converter Application");
+//
+//        Locale currentLocale = request.getLocale();
+//        String countryCode = currentLocale.getCountry();
+//        String countryName = currentLocale.getDisplayCountry();
+//
+//        String langCode = currentLocale.getLanguage();
+//        String langName = currentLocale.getDisplayLanguage();
+//
+//        System.out.println(countryCode + ": "+ countryName);
+//        System.out.println(langCode + ": " + langName);
+//
+//        System.out.println("----------------");
+//        String[] language = Locale.getISOLanguages();
+//
+//        for (String lang : language){
+//            Locale locale = new Locale(lang);
+////            System.out.println(lang +":"+locale.getDisplayLanguage());
+//        }
+//
+//        return "index";
+//    }
 
     @GetMapping("/home")
     public String home(){
-        return "home";
+        String escapedStr = "\\u0905\\u092d\\u0940 \\u0938\\u092e\\u092f \\u0939\\u0948 \\u091c\\u0928\\u0924\\u093e";
+        String hindiText = StringEscapeUtils.unescapeJava(escapedStr);
+        System.out.println(hindiText);
+        return hindiText;
+//        return "home";
     }
-
 }
