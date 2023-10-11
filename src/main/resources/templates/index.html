@@ -40,10 +40,15 @@
 
     <button type="submit" th:text="#{button.convert}">Convert</button>
 </form>
+<br><br>
 <div th:if="${result}">
-    <p th:text="'Conversion Result: ' + ${result}"></p>
+    <p th:text="#{div.result}">Conversion Result:</p>
+    <p th:text="' : ' + ${result}"></p>
 </div>
 
+<!--<div th:text="#{div.result}" th:if="${result}">-->
+<!--    <p th:text="'Conversion Result: ' + ${result}"></p>-->
+<!--</div>-->
 <script th:inline="javascript">
     function changeLocale(selectElement) {
         var selectedLocale = selectElement.value;

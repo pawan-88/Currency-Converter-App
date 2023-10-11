@@ -31,35 +31,6 @@ public class CurrencyConverterController {
     public String index(){
         return "index";
     }
-//    @GetMapping("/")
-//    public String index(Model model, HttpServletRequest request){
-//        model.addAttribute("pageTitle","Currency Converter Application");
-//
-//        Locale currentLocale = request.getLocale();
-//        String countryCode = currentLocale.getCountry();
-//        String countryName = currentLocale.getDisplayCountry();
-//
-//        String langCode = currentLocale.getLanguage();
-//        String langName = currentLocale.getDisplayLanguage();
-//
-//        System.out.println(countryCode + ": "+ countryName);
-//        System.out.println(langCode + ": " + langName);
-//
-//        System.out.println("----------------");
-//        String[] language = Locale.getISOLanguages();
-//
-//        for (String lang : language){
-//            Locale locale = new Locale(lang);
-////            System.out.println(lang +":"+locale.getDisplayLanguage());
-//        }
-//
-//        return "index";
-//    }
-
-//    @GetMapping("/home")
-//    public String home(){
-//        return "home";
-//    }
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -127,6 +98,36 @@ public class CurrencyConverterController {
     public String changeLocale(@RequestParam String language){
         System.out.println("Language selected"+language);
         return "index";
-
     }
+
+        @GetMapping("/")
+    public String index(Model model, HttpServletRequest request){
+        model.addAttribute("pageTitle","Currency Converter Application");
+
+        Locale currentLocale = request.getLocale();
+        String countryCode = currentLocale.getCountry();
+        String countryName = currentLocale.getDisplayCountry();
+
+        String langCode = currentLocale.getLanguage();
+        String langName = currentLocale.getDisplayLanguage();
+
+        System.out.println(countryCode + ": "+ countryName);
+        System.out.println(langCode + ": " + langName);
+
+        System.out.println("----------------");
+        String[] language = Locale.getISOLanguages();
+
+        for (String lang : language){
+            Locale locale = new Locale(lang);
+//            System.out.println(lang +":"+locale.getDisplayLanguage());
+        }
+
+        return "index";
+    }
+
+    @GetMapping("/home")
+    public String home(){
+        return "home";
+    }
+
 }
