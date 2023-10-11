@@ -8,25 +8,58 @@ import com.squareup.okhttp.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Locale;
 
-@RestController
+//@RestController
+@Controller
 //@RequestMapping("/v1")
 public class CurrencyConverterController {
 
     @Autowired
     private CurrencyConverterRepository repository;
 
-
+    @GetMapping
     public String index(){
         return "index";
     }
+//    @GetMapping("/")
+//    public String index(Model model, HttpServletRequest request){
+//        model.addAttribute("pageTitle","Currency Converter Application");
+//
+//        Locale currentLocale = request.getLocale();
+//        String countryCode = currentLocale.getCountry();
+//        String countryName = currentLocale.getDisplayCountry();
+//
+//        String langCode = currentLocale.getLanguage();
+//        String langName = currentLocale.getDisplayLanguage();
+//
+//        System.out.println(countryCode + ": "+ countryName);
+//        System.out.println(langCode + ": " + langName);
+//
+//        System.out.println("----------------");
+//        String[] language = Locale.getISOLanguages();
+//
+//        for (String lang : language){
+//            Locale locale = new Locale(lang);
+////            System.out.println(lang +":"+locale.getDisplayLanguage());
+//        }
+//
+//        return "index";
+//    }
+
+//    @GetMapping("/home")
+//    public String home(){
+//        return "home";
+//    }
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -88,5 +121,12 @@ public class CurrencyConverterController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while making the request: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/locale")
+    public String changeLocale(@RequestParam String language){
+        System.out.println("Language selected"+language);
+        return "index";
+
     }
 }

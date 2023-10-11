@@ -1,30 +1,68 @@
-    <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>Currency Converter</title>
-    </head>
-    <body>
-    <h1>Currency Converter</h1>
-    <form th:action="@{/currency-conversion}" method="get">
-        <label for="fromCurrency">From Currency:</label>
-        <input type="text" id="fromCurrency" name="fromCurrency" required>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{app.currency}">Currency Converter App</title>
+</head>
+<body>
+<h1 th:text="#{app.currency}">Currency Converter</h1>
 
-        <label for="toCurrency">To Currency:</label>
-        <input type="text" id="toCurrency" name="toCurrency" required>
+<!-- Language dropdown -->
+<label for="locale">Language:</label>
+<select name="locale" id="locale" onchange="changeLocale(this);">
+    <option value="en" >English</option>
+    <option value="fr">French</option>
+<!--    <option value="hi">Hindi</option>-->
+    <option value="nl">Dutch</option>
+    <option value="it">Italian</option>
+<!--    <option value="bn">Bengali</option>-->
+</select>
 
-        <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" >
+<!--<select name="locale" id="locale" onchange="changeLocale(this);">-->
+<!--    <option value="en" th:text="#{switch-en}" selected>Switch to English</option>-->
+<!--    <option value="fr" th:text="#{switch-fr}">Switch to French</option>-->
+<!--&lt;!&ndash;    <option value="hi" th:text="#{switch-hi}">Switch to Hindi</option>&ndash;&gt;-->
+<!--</select>-->
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date">
+<br><br>
+<form th:action="@{/currency-conversion}" method="get">
+    <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>
+    <input type="text" id="fromCurrency" name="fromCurrency" required>
 
-        <button type="submit">Convert</button>
-    </form>
-    <div th:if="${result}">
-        <p th:text="'Conversion Result: ' + ${result}"></p>
-<!--        <button type="submit">send</button>-->
-    </div>
-    </body>
-    </html>
+    <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>
+    <input type="text" id="toCurrency" name="toCurrency" required>
 
+    <label for="amount" th:text="#{label.amount}">Amount:</label>
+    <input type="text" id="amount" name="amount">
+
+    <label for="date" th:text="#{label.date}">Date:</label>
+    <input type="date" id="date" name="date">
+
+    <button type="submit" th:text="#{button.convert}">Convert</button>
+</form>
+<div th:if="${result}">
+    <p th:text="'Conversion Result: ' + ${result}"></p>
+</div>
+
+<script th:inline="javascript">
+    function changeLocale(selectElement) {
+        var selectedLocale = selectElement.value;
+        var currentUrl = window.location.href;
+        var newUrl = currentUrl.replace(/\?lang=\w+/, "?lang=" + selectedLocale);
+        setCookie("local-cookie", selectedLocale, 365);
+        window.location.href = newUrl;
+    }
+
+     function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+</script>
+
+</body>
+</html>
