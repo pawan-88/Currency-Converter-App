@@ -252,7 +252,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-image: url('https://example.com/your-image.jpg'); /* Replace with your image URL */
+            background-image: radial-gradient(circle, red, yellow, green);
             background-size: cover;
             font-family: Arial, sans-serif;
         }
@@ -261,7 +261,7 @@
             max-width: 400px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-image: conic-gradient(red, yellow, green, blue, black);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow for better visibility */
         }
@@ -285,7 +285,7 @@
     <div class="form-group">
         <label for="locale" th:text="#{label.language}">Language:</label>
         <select class="form-control" name="locale" id="locale" onchange="changeLanguage(this);">
-            <option value="hi" th:text="#{switch-hi}" selected>Hindi</option>
+            <option value="hi" th:text="#{switch-hi}" >Hindi</option>
             <option value="fr" th:text="#{switch-fr}">French</option>
             <!--            <option value="hi" th:text="#{switch-hi}">Hindi</option>-->
             <option value="nl" th:text="#{switch-nl}">Dutch</option>
@@ -312,12 +312,12 @@
         <!--        </div>-->
         <div class="form-group">
             <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>
-            <input type="text" class="form-control" id="fromCurrency" name="fromCurrency" required>
+            <input type="text" placeholder="INR" class="form-control" id="fromCurrency" name="fromCurrency" required>
         </div>
 
         <div class="form-group">
             <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>
-            <input type="text" class="form-control" id="toCurrency" name="toCurrency" required>
+            <input type="text" placeholder="USD" class="form-control" id="toCurrency" name="toCurrency" required>
             <div class="invalid-feedback" style="display: none" id="currencyError">
                 Unsupported currencies
             </div>
@@ -326,7 +326,7 @@
 
         <div class="form-group">
             <label for="amount" th:text="#{label.amount}">Amount:</label>
-            <input type="text" class="form-control" id="amount" name="amount">
+            <input type="text" placeholder="2 OR 2.0" class="form-control" id="amount" name="amount">
             <div class="invalid-feedback" style="display: none" id="amountError">
                 Invalid input (e.g., a non-numerical value for the currency amount)
             </div>
@@ -339,7 +339,7 @@
 
         <div class="form-group">
             <label for="date" th:text="#{label.date}">Date:</label>
-            <input type="date" class="form-control" id="date" name="date">
+            <input type="date" placeholder="01-01-2023" class="form-control" id="date" name="date">
         </div>
 
 <!--        <button type="submit" class="btn btn-primary" th:text="#{button.convert}">Convert</button>-->
@@ -364,7 +364,7 @@
     </div>
 </div>
 
-< th:inline="javascript">
+<script th:inline="javascript">
     function changeLanguage(selectElement) {
         var selectedLanguage = selectElement.value;
         var currentUrl = window.location.href;
@@ -382,20 +382,8 @@
         }
         document.cookie = name + "=" + value + expires + "; path=/";
     }
-     document.addEventListener("DOMContentLoaded", function () {
-        var selectedLanguage = getCookie("selectedLanguage");
-        if (selectedLanguage) {
-            document.getElementById("locale").value = selectedLanguage;
-        }
-    });
 
-    // Function to get the value of a cookie
-    function getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length === 2) return parts.pop().split(";").shift();
-    }
-function updateQueryStringParameter(uri, key, value) {
+    function updateQueryStringParameter(uri, key, value) {
         var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
         var separator = uri.indexOf("?") !== -1 ? "&" : "?";
         if (uri.match(re)) {
