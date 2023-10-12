@@ -252,7 +252,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-image: radial-gradient(circle, red, yellow, green);
+            background-image: sky;
             background-size: cover;
             font-family: Arial, sans-serif;
         }
@@ -261,7 +261,7 @@
             max-width: 400px;
             margin: 0 auto;
             padding: 20px;
-            background-image: conic-gradient(red, yellow, green, blue, black);
+            background-image: linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1));
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow for better visibility */
         }
@@ -285,7 +285,7 @@
     <div class="form-group">
         <label for="locale" th:text="#{label.language}">Language:</label>
         <select class="form-control" name="locale" id="locale" onchange="changeLanguage(this);">
-            <option value="hi" th:text="#{switch-hi}" >Hindi</option>
+            <option value="hi" th:text="#{switch-hi}" >Select</option>
             <option value="fr" th:text="#{switch-fr}">French</option>
             <!--            <option value="hi" th:text="#{switch-hi}">Hindi</option>-->
             <option value="nl" th:text="#{switch-nl}">Dutch</option>
@@ -312,12 +312,123 @@
         <!--        </div>-->
         <div class="form-group">
             <label for="fromCurrency" th:text="#{label.fromCurrency}">From Currency:</label>
-            <input type="text" placeholder="INR" class="form-control" id="fromCurrency" name="fromCurrency" required>
+<!--            <input type="text" placeholder="INR" class="form-control" id="fromCurrency" name="fromCurrency" required>-->
+            <select class="form-control" id="fromCurrency" name="fromCurrency" required>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="CNY">CNY</option>
+                <option value="SEK">SEK</option>
+                <option value="NZD">NZD</option>
+                <option value="SGD">SGD</option>
+                <option value="HKD">HKD</option>
+                <option value="NOK">NOK</option>
+                <option value="KRW">KRW</option>
+                <option value="TRY">TRY</option>
+                <option value="INR" selected>INR</option>
+                <option value="BRL">BRL</option>
+                <option value="ZAR">ZAR</option>
+                <option value="RUB">RUB</option>
+                <option value="AED">AED</option>
+                <option value="SAR">SAR</option>
+                <option value="QAR">QAR</option>
+                <option value="KWD">KWD</option>
+                <option value="OMR">OMR</option>
+                <option value="THB">THB</option>
+                <option value="IDR">IDR</option>
+                <option value="MYR">MYR</option>
+                <option value="PHP">PHP</option>
+                <option value="MXN">MXN</option>
+                <option value="ARS">ARS</option>
+                <option value="CLP">CLP</option>
+                <option value="COP">COP</option>
+                <option value="PEN">PEN</option>
+                <option value="EGP">EGP</option>
+                <option value="ILS">ILS</option>
+                <option value="DKK">DKK</option>
+                <option value="HUF">HUF</option>
+                <option value="PLN">PLN</option>
+                <option value="CZK">CZK</option>
+                <option value="RON">RON</option>
+                <option value="BGN">BGN</option>
+                <option value="HRK">HRK</option>
+                <option value="RSD">RSD</option>
+                <option value="UAH">UAH</option>
+                <option value="HNL">HNL</option>
+                <option value="DOP">DOP</option>
+                <option value="CRC">CRC</option>
+                <option value="CUP">CUP</option>
+                <option value="JMD">JMD</option>
+                <option value="BOB">BOB</option>
+                <option value="PYG">PYG</option>
+                <option value="UYU">UYU</option>
+            </select>
+<!--            <div class="invalid-feedback" style="display: none" id="currencyError">-->
+<!--                Unsupported currencies-->
+<!--            </div>-->
         </div>
 
         <div class="form-group">
             <label for="toCurrency" th:text="#{label.toCurrency}">To Currency:</label>
-            <input type="text" placeholder="USD" class="form-control" id="toCurrency" name="toCurrency" required>
+<!--            <input type="text" placeholder="USD" class="form-control" id="toCurrency" name="toCurrency" required>-->
+            <select class="form-control" id="toCurrency" name="toCurrency" required>
+                <option value="USD" selected>USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="CHF">CHF</option>
+                <option value="CNY">CNY</option>
+                <option value="SEK">SEK</option>
+                <option value="NZD">NZD</option>
+                <option value="SGD">SGD</option>
+                <option value="HKD">HKD</option>
+                <option value="NOK">NOK</option>
+                <option value="KRW">KRW</option>
+                <option value="TRY">TRY</option>
+                <option value="INR">INR</option>
+                <option value="BRL">BRL</option>
+                <option value="ZAR">ZAR</option>
+                <option value="RUB">RUB</option>
+                <option value="AED">AED</option>
+                <option value="SAR">SAR</option>
+                <option value="QAR">QAR</option>
+                <option value="KWD">KWD</option>
+                <option value="OMR">OMR</option>
+                <option value="THB">THB</option>
+                <option value="IDR">IDR</option>
+                <option value="MYR">MYR</option>
+                <option value="PHP">PHP</option>
+                <option value="MXN">MXN</option>
+                <option value="ARS">ARS</option>
+                <option value="CLP">CLP</option>
+                <option value="COP">COP</option>
+                <option value="PEN">PEN</option>
+                <option value="EGP">EGP</option>
+                <option value="ILS">ILS</option>
+                <option value="DKK">DKK</option>
+                <option value="HUF">HUF</option>
+                <option value="PLN">PLN</option>
+                <option value="CZK">CZK</option>
+                <option value="RON">RON</option>
+                <option value="BGN">BGN</option>
+                <option value="HRK">HRK</option>
+                <option value="RSD">RSD</option>
+                <option value="UAH">UAH</option>
+                <option value="HNL">HNL</option>
+                <option value="DOP">DOP</option>
+                <option value="CRC">CRC</option>
+                <option value="CUP">CUP</option>
+                <option value="JMD">JMD</option>
+                <option value="BOB">BOB</option>
+                <option value="PYG">PYG</option>
+                <option value="UYU">UYU</option>
+            </select>
             <div class="invalid-feedback" style="display: none" id="currencyError">
                 Unsupported currencies
             </div>
@@ -339,7 +450,8 @@
 
         <div class="form-group">
             <label for="date" th:text="#{label.date}">Date:</label>
-            <input type="date" placeholder="01-01-2023" class="form-control" id="date" name="date">
+            <input type="date" placeholder="01-01-2023" class="form-control" id="date" name="date" onchange="validateDate()">
+            <p id="dateError" style="color: red;"></p>
         </div>
 
 <!--        <button type="submit" class="btn btn-primary" th:text="#{button.convert}">Convert</button>-->
@@ -464,6 +576,22 @@
         window.location.href = "/conversion-history"; // Redirect to the history page URL
     }
 
+       document.getElementById("fromCurrency").addEventListener("change", function () {
+        var fromCurrency = this.value;
+        var toCurrencyDropdown = document.getElementById("toCurrency");
+
+        // Enable all options
+        for (var i = 0; i < toCurrencyDropdown.options.length; i++) {
+            toCurrencyDropdown.options[i].disabled = false;
+        }
+
+        // Disable the selected currency in "To Currency"
+        for (var i = 0; i < toCurrencyDropdown.options.length; i++) {
+            if (toCurrencyDropdown.options[i].value === fromCurrency) {
+                toCurrencyDropdown.options[i].disabled = true;
+            }
+        }
+    });
 
 </script>
 <script th:inline="javascript">
@@ -503,6 +631,46 @@
 
     // ... (your existing JavaScript code) ...
 </script>
+
+<script>
+    // Function to set the minimum date to the current date
+   function setMaxDate() {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        var day = String(currentDate.getDate()).padStart(2, '0');
+        var formattedDate = `${year}-${month}-${day}`;
+
+        document.getElementById("date").setAttribute("max", formattedDate);
+    }
+        setMaxDate();
+
+    // Function to validate the selected date
+    function validateDate() {
+        var inputDate = new Date(document.getElementById("date").value);
+        var currentDate = new Date();
+
+        if (inputDate > currentDate) {
+            document.getElementById("dateError").textContent = "Please select a date on or before the current date.";
+            document.getElementById("date").value = ""; // Clear the input field
+        } else {
+            document.getElementById("dateError").textContent = "";
+        }
+    }
+</script>
+<!--<script>-->
+<!--    function validateDate() {-->
+<!--        var inputDate = new Date(document.getElementById("date").value);-->
+<!--        var currentDate = new Date();-->
+<!--        var dateErrorElement = document.getElementById("dateError");-->
+
+<!--        if (inputDate > currentDate) {-->
+<!--        dateErrorElement.textContent = "Please select a date on or before the current date.";-->
+<!--&lt;!&ndash;            alert("Please select a date on or before the current date.");&ndash;&gt;-->
+<!--            document.getElementById("date").value = ""; // Clear the input field-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
