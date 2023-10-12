@@ -5,7 +5,6 @@ import com.currency.converter.repository.CurrencyConverterRepository;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 import java.util.Locale;
 
 //@RestController
@@ -96,42 +99,52 @@ public class CurrencyConverterController {
     }
 
     @GetMapping("/locale")
-    public String changeLocale(@RequestParam String language){
+    public String changeLocale(@RequestParam String language,HttpServletRequest request, HttpServletResponse response){
+        Locale locale = new Locale(language);
+        LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+        localeResolver.setLocale(request, response, locale);
         System.out.println("Language selected"+language);
         return "index";
     }
 
-//        @GetMapping("/")
-//    public String index(Model model, HttpServletRequest request){
-//        model.addAttribute("pageTitle","Currency Converter Application");
-//
-//        Locale currentLocale = request.getLocale();
-//        String countryCode = currentLocale.getCountry();
-//        String countryName = currentLocale.getDisplayCountry();
-//
-//        String langCode = currentLocale.getLanguage();
-//        String langName = currentLocale.getDisplayLanguage();
-//
-//        System.out.println(countryCode + ": "+ countryName);
-//        System.out.println(langCode + ": " + langName);
-//
-//        System.out.println("----------------");
-//        String[] language = Locale.getISOLanguages();
-//
-//        for (String lang : language){
-//            Locale locale = new Locale(lang);
-////            System.out.println(lang +":"+locale.getDisplayLanguage());
-//        }
-//
-//        return "index";
+        @GetMapping("/")
+    public String index(Model model, HttpServletRequest request){
+        model.addAttribute("pageTitle","Currency Converter Application");
+
+        Locale currentLocale = request.getLocale();
+        String countryCode = currentLocale.getCountry();
+        String countryName = currentLocale.getDisplayCountry();
+
+        String langCode = currentLocale.getLanguage();
+        String langName = currentLocale.getDisplayLanguage();
+
+        System.out.println(countryCode + ": "+ countryName);
+        System.out.println(langCode + ": " + langName);
+
+        System.out.println("----------------");
+        String[] language = Locale.getISOLanguages();
+
+        for (String lang : language){
+            Locale locale = new Locale(lang);
+//            System.out.println(lang +":"+locale.getDisplayLanguage());
+        }
+
+        return "index";
+    }
+
+//    @GetMapping("/home")
+//    public String home(){
+//        String escapedStr = "\\u0905\\u092d\\u0940 \\u0938\\u092e\\u092f \\u0939\\u0948 \\u091c\\u0928\\u0924\\u093e";
+//        String hindiText = StringEscapeUtils.unescapeJava(escapedStr);
+//        System.out.println(hindiText);
+//        return hindiText;
+////        return "home";
 //    }
 
-    @GetMapping("/home")
-    public String home(){
-        String escapedStr = "\\u0905\\u092d\\u0940 \\u0938\\u092e\\u092f \\u0939\\u0948 \\u091c\\u0928\\u0924\\u093e";
-        String hindiText = StringEscapeUtils.unescapeJava(escapedStr);
-        System.out.println(hindiText);
-        return hindiText;
-//        return "home";
+    @GetMapping("/conversion-history")
+    public String showConversionHistory(Model model){
+        List<Currency> currencyList = repository.findAll();
+        model.addAttribute("conversionHistory",currencyList);
+        return "history";
     }
 }
