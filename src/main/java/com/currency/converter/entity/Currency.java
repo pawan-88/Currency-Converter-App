@@ -13,14 +13,14 @@ public class Currency {
     private Long id;
     private String fromCurrency;
     private String toCurrency;
-    private BigDecimal amount;
+    private String amount;
     private Date date;
     private String conversionResult;
 
     public Currency() {
     }
 
-    public Currency(Long id, String fromCurrency, String toCurrency, BigDecimal amount, String conversionResult) {
+    public Currency(Long id, String fromCurrency, String toCurrency, String amount, String conversionResult) {
         this.id = id;
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
@@ -53,11 +53,11 @@ public class Currency {
         this.toCurrency = toCurrency;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 

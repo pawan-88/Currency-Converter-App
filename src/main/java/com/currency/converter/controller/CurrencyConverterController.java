@@ -2,6 +2,7 @@ package com.currency.converter.controller;
 
 import com.currency.converter.entity.Currency;
 import com.currency.converter.repository.CurrencyConverterRepository;
+import com.currency.converter.service.CurrencyConverterService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -29,7 +30,8 @@ import java.util.Locale;
 public class CurrencyConverterController {
 
     @Autowired
-    private CurrencyConverterRepository repository;
+    private CurrencyConverterService service;
+//    private CurrencyConverterRepository repository;
 
     @GetMapping
     public String index(){
@@ -42,7 +44,7 @@ public class CurrencyConverterController {
     public ResponseEntity<String> performCurrencyConversion(
             @RequestParam("fromCurrency") String fromCurrency,
             @RequestParam("toCurrency") String toCurrency,
-            @RequestParam("amount") BigDecimal amount,
+            @RequestParam("amount") String amount,
             @RequestParam("date") Date date) {
 
         int maxLength = 255;
@@ -50,6 +52,9 @@ public class CurrencyConverterController {
         // Check for invalid input
         if (fromCurrency == null || toCurrency == null || amount == null) {
             return ResponseEntity.badRequest().body("Invalid input. Please provide valid values.");
+        }
+        if (!isNumeric(amount)) {
+            return ResponseEntity.badRequest().body("Invalid input. Amount should contain only numerical values.");
         }
 
         try {
@@ -76,12 +81,12 @@ public class CurrencyConverterController {
                 Currency currencySave = new Currency();
                 currencySave.setFromCurrency(fromCurrency);
                 currencySave.setToCurrency(toCurrency);
-                BigDecimal amountValue = new BigDecimal(String.valueOf(amount));
-                currencySave.setAmount(amountValue);
+//                BigDecimal amountValue = new BigDecimal(String.valueOf(amount));
+                currencySave.setAmount(amount);
                 currencySave.setDate(date);
                 currencySave.setConversionResult(truncatedResponse);
 
-                repository.save(currencySave);
+                service.saveData(currencySave);
                 return ResponseEntity.ok("Conversion Result: " + responseBody);
             } else {
                 if (response.code() == 400) {
@@ -96,6 +101,10 @@ public class CurrencyConverterController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while making the request: " + e.getMessage());
         }
+    }
+
+    private boolean isNumeric(String str) {
+        return str.matches("\\d+(\\.\\d+)?"); // This regular expression allows for decimal numbers as well.
     }
 
     @GetMapping("/locale")
@@ -143,7 +152,7 @@ public class CurrencyConverterController {
 
     @GetMapping("/conversion-history")
     public String showConversionHistory(Model model){
-        List<Currency> currencyList = repository.findAll();
+        List<Currency> currencyList = service.getAllData();
         model.addAttribute("conversionHistory",currencyList);
         return "history";
     }

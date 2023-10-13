@@ -437,7 +437,7 @@
 
         <div class="form-group">
             <label for="amount" th:text="#{label.amount}">Amount:</label>
-            <input type="text" placeholder="2 OR 2.0" class="form-control" id="amount" name="amount">
+            <input type="text" placeholder="2 OR 2.0" class="form-control" id="amount" name="amount" oninput="validateAmount()">
             <div class="invalid-feedback" style="display: none" id="amountError">
                 Invalid input (e.g., a non-numerical value for the currency amount)
             </div>
@@ -658,20 +658,25 @@
         }
     }
 </script>
-<!--<script>-->
-<!--    function validateDate() {-->
-<!--        var inputDate = new Date(document.getElementById("date").value);-->
-<!--        var currentDate = new Date();-->
-<!--        var dateErrorElement = document.getElementById("dateError");-->
+<script>
+function validateAmount() {
+var amountInput = document.getElementById("amount");
+var amountError = document.getElementById("amountError");
+var convertButton = document.getElementById("convertButton");
 
-<!--        if (inputDate > currentDate) {-->
-<!--        dateErrorElement.textContent = "Please select a date on or before the current date.";-->
-<!--&lt;!&ndash;            alert("Please select a date on or before the current date.");&ndash;&gt;-->
-<!--            document.getElementById("date").value = ""; // Clear the input field-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
+// Check if the input value is not a number
+if (isNaN(amountInput.value)) {
+amountInput.classList.add("is-invalid");
+amountError.style.display = "block";
+convertButton.disabled = true; // Disable the "Convert" button
+} else {
+amountInput.classList.remove("is-invalid");
+amountError.style.display = "none";
+convertButton.disabled = false; // Enable the "Convert" button
+}
+}
 
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
