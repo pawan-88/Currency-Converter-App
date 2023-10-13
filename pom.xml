@@ -61,7 +61,7 @@
 			<version>1.94.5</version>
 		</dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -53,6 +53,7 @@
             <th>Amount</th>
             <th>Date</th>
             <th>Conversion Result</th>
+            <th>Rate</th>
         </tr>
         </thead>
         <tbody>
@@ -62,6 +63,7 @@
             <td th:text="${conversion.amount}"></td>
             <td th:text="${conversion.date}"></td>
             <td th:text="${conversion.conversionResult}"></td>
+            <td th:text="${conversion.todayRate}"></td>
         </tr>
         </tbody>
     </table>

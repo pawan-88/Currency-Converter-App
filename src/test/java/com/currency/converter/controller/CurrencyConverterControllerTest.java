@@ -45,7 +45,7 @@ class CurrencyConverterControllerTest {
 
         // Run the test
         final ResponseEntity<String> result = currencyConverterControllerUnderTest.performCurrencyConversion(
-                "USD", "INR", new BigDecimal("5.0"), Date.valueOf(LocalDate.of(2020, 1, 1)));
+                "USD", "INR", new String("5.0"), Date.valueOf(LocalDate.of(2020, 1, 1)));
 
         // Verify the status code
         assertEquals(expectedResult.getStatusCode(), result.getStatusCode());

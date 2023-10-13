@@ -15,7 +15,21 @@ public class Currency {
     private String toCurrency;
     private String amount;
     private Date date;
+
+    public Currency(String todayRate) {
+        this.todayRate = todayRate;
+    }
+
     private String conversionResult;
+    private String todayRate;
+
+    public String getTodayRate() {
+        return todayRate;
+    }
+
+    public void setTodayRate(String todayRate) {
+        this.todayRate = todayRate;
+    }
 
     public Currency() {
     }
@@ -75,5 +89,11 @@ public class Currency {
 
     public void setConversionResult(String conversionResult) {
         this.conversionResult = conversionResult;
+    }
+
+    @Override
+    public String toString() {
+        return  conversionResult + '\'' +
+                ", todayRate='" + todayRate + '\'';
     }
 }

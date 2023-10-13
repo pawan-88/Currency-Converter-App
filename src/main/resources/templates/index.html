@@ -286,8 +286,10 @@
         <label for="locale" th:text="#{label.language}">Language:</label>
         <select class="form-control" name="locale" id="locale" onchange="changeLanguage(this);">
             <option value="hi" th:text="#{switch-hi}" >Select</option>
+            <option value="mh" th:text="#{switch-mh}" >Marathi</option>
             <option value="fr" th:text="#{switch-fr}">French</option>
-            <!--            <option value="hi" th:text="#{switch-hi}">Hindi</option>-->
+            <option value="hi" th:text="#{switch-hi}">Hindi</option>
+            <option value="bn" th:text="#{switch-bn}">Bengali</option>
             <option value="nl" th:text="#{switch-nl}">Dutch</option>
             <option value="it" th:text="#{switch-it}">Italian</option>
             <option value="en" th:text="#{switch-en}">English</option>
@@ -465,12 +467,10 @@
         <p th:text="#{label.result}" class="font-weight-bold">Conversion Result:</p>
         <p id="convertedAmount" class="text-primary"></p>
     </div>
-
     <!--    <div class="mt-3" th:if="${result}">-->
     <!--        <p th:text="#{div.result}" class="font-weight-bold">Conversion Result:</p>-->
     <!--        <p th:text="' : ' + ${result}" class="text-primary"></p>-->
     <!--    </div>-->
-
     <div class="alert alert-danger" id="errorDiv" style="display: none;">
         <p id="errorMessage"></p>
     </div>

@@ -1,12 +1,13 @@
 package com.currency.converter.controller;
 
 import com.currency.converter.entity.Currency;
-import com.currency.converter.repository.CurrencyConverterRepository;
 import com.currency.converter.service.CurrencyConverterService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 //@RestController
 @Controller
@@ -73,8 +75,12 @@ public class CurrencyConverterController {
 
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-                String truncatedResponse = responseBody.length() > maxLength ? responseBody.substring(0, maxLength) : responseBody;
+//                String truncatedResponse = responseBody.length() > maxLength ? responseBody.substring(0, maxLength) : responseBody;
 
+                JsonParser jsonParser = JsonParserFactory.getJsonParser();
+                Map<String, Object> jsonResponse = jsonParser.parseMap(responseBody);
+                BigDecimal convertedAmount = new BigDecimal(jsonResponse.get("result").toString());
+                BigDecimal todayRate = new BigDecimal(((Map<String, Object>)jsonResponse.get("info")).get("rate").toString());
 //                BigDecimal conversionRate = extractConversionRate(responseBody);
 //                BigDecimal convertedAmount = amount.multiply(conversionRate);
 
@@ -84,10 +90,11 @@ public class CurrencyConverterController {
 //                BigDecimal amountValue = new BigDecimal(String.valueOf(amount));
                 currencySave.setAmount(amount);
                 currencySave.setDate(date);
-                currencySave.setConversionResult(truncatedResponse);
+                currencySave.setConversionResult(convertedAmount.toString());
+                currencySave.setTodayRate(todayRate.toString());
 
                 service.saveData(currencySave);
-                return ResponseEntity.ok("Conversion Result: " + responseBody);
+                return ResponseEntity.ok("Conversion Result: " + currencySave);
             } else {
                 if (response.code() == 400) {
                     return ResponseEntity.badRequest().body("Invalid conversion request. Please check your input.");
