@@ -1,6 +1,7 @@
 package com.currency.converter.controller;
 
 import com.currency.converter.entity.Currency;
+import com.currency.converter.exeption.*;
 import com.currency.converter.service.CurrencyConverterService;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -8,10 +9,12 @@ import com.squareup.okhttp.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
@@ -21,7 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,18 +51,20 @@ public class CurrencyConverterController {
             @RequestParam("fromCurrency") String fromCurrency,
             @RequestParam("toCurrency") String toCurrency,
             @RequestParam("amount") String amount,
-            @RequestParam("date") Date date) {
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        int maxLength = 255;
+//        int maxLength = 255;
 
         // Check for invalid input
         if (fromCurrency == null || toCurrency == null || amount == null) {
-            return ResponseEntity.badRequest().body("Invalid input. Please provide valid values.");
+            throw new InvalidInputException("Invalid input. Please provide valid values.");
         }
         if (!isNumeric(amount)) {
-            return ResponseEntity.badRequest().body("Invalid input. Amount should contain only numerical values.");
+            throw new InvalidInputException("Invalid input. Amount should contain only numerical values.");
         }
-
+        if (date == null) {
+            date = LocalDate.now(); // Set the default value to the current date
+        }
         try {
             String apiUrl = "https://api.apilayer.com/fixer/convert?" +
                     "to=" + toCurrency +
@@ -97,17 +103,20 @@ public class CurrencyConverterController {
                 return ResponseEntity.ok("Conversion Result: " + currencySave);
             } else {
                 if (response.code() == 400) {
-                    return ResponseEntity.badRequest().body("Invalid conversion request. Please check your input.");
+                    throw new InvalidConversionRequestException("Invalid conversion request. Please check your input.");
                 } else if (response.code() == 404) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Currency not found.");
+                    throw new CurrencyNotFoundException("Currency not found.");
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Request failed: " + response.code() + " - " + response.message());
+                    throw new RequestFailedException("Request failed: " + response.code() + " - " + response.message());
                 }
             }
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while making the request: " + e.getMessage());
-        }
+            throw new RequestFailedException("Error while making the request: " + e.getMessage());        }
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInvalidInputException(InvalidInputException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     private boolean isNumeric(String str) {
@@ -123,30 +132,30 @@ public class CurrencyConverterController {
         return "index";
     }
 
-        @GetMapping("/")
-    public String index(Model model, HttpServletRequest request){
-        model.addAttribute("pageTitle","Currency Converter Application");
-
-        Locale currentLocale = request.getLocale();
-        String countryCode = currentLocale.getCountry();
-        String countryName = currentLocale.getDisplayCountry();
-
-        String langCode = currentLocale.getLanguage();
-        String langName = currentLocale.getDisplayLanguage();
-
-        System.out.println(countryCode + ": "+ countryName);
-        System.out.println(langCode + ": " + langName);
-
-        System.out.println("----------------");
-        String[] language = Locale.getISOLanguages();
-
-        for (String lang : language){
-            Locale locale = new Locale(lang);
-//            System.out.println(lang +":"+locale.getDisplayLanguage());
-        }
-
-        return "index";
-    }
+//        @GetMapping("/")
+//    public String index(Model model, HttpServletRequest request){
+//        model.addAttribute("pageTitle","Currency Converter Application");
+//
+//        Locale currentLocale = request.getLocale();
+//        String countryCode = currentLocale.getCountry();
+//        String countryName = currentLocale.getDisplayCountry();
+//
+//        String langCode = currentLocale.getLanguage();
+//        String langName = currentLocale.getDisplayLanguage();
+//
+//        System.out.println(countryCode + ": "+ countryName);
+//        System.out.println(langCode + ": " + langName);
+//
+//        System.out.println("----------------");
+//        String[] language = Locale.getISOLanguages();
+//
+//        for (String lang : language){
+//            Locale locale = new Locale(lang);
+////            System.out.println(lang +":"+locale.getDisplayLanguage());
+//        }
+//
+//        return "index";
+//    }
 
 //    @GetMapping("/home")
 //    public String home(){
@@ -158,9 +167,27 @@ public class CurrencyConverterController {
 //    }
 
     @GetMapping("/conversion-history")
-    public String showConversionHistory(Model model){
+    public String showConversionHistory(Model model, @RequestParam(name = "page", defaultValue = "1") int page){
+
+        int pageSize = 12; // Number of items per page
         List<Currency> currencyList = service.getAllData();
-        model.addAttribute("conversionHistory",currencyList);
+
+        int totalItems = currencyList.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        if (page < 1 || page > totalPages) {
+            throw new PageNotFoundException("Requested page not found.");
+        }
+
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, totalItems);
+
+        List<Currency> paginatedConversions = currencyList.subList(startIndex, endIndex);
+
+        Collections.reverse(currencyList);
+//        Collections.reverse(paginatedConversions);
+        model.addAttribute("paginatedConversions", paginatedConversions);
+        model.addAttribute("totalPages", totalPages);
         return "history";
     }
 }

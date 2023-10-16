@@ -55,11 +55,6 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>com.google.cloud</groupId>
-			<artifactId>google-cloud-translate</artifactId>
-			<version>1.94.5</version>
-		</dependency>
 
     </dependencies>
 

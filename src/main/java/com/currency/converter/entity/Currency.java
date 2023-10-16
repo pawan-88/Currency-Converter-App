@@ -1,7 +1,7 @@
 package com.currency.converter.entity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -14,14 +14,15 @@ public class Currency {
     private String fromCurrency;
     private String toCurrency;
     private String amount;
-    private Date date;
+    private LocalDate date;
+    private String conversionResult;
+    private String todayRate;
+
 
     public Currency(String todayRate) {
         this.todayRate = todayRate;
     }
 
-    private String conversionResult;
-    private String todayRate;
 
     public String getTodayRate() {
         return todayRate;
@@ -75,11 +76,11 @@ public class Currency {
         this.amount = amount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -94,6 +95,6 @@ public class Currency {
     @Override
     public String toString() {
         return  conversionResult + '\'' +
-                ", todayRate='" + todayRate + '\'';
+                ",       TodayRate='" + todayRate + '\'';
     }
 }
