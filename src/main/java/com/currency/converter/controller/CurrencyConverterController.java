@@ -81,7 +81,6 @@ public class CurrencyConverterController {
 
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-//                String truncatedResponse = responseBody.length() > maxLength ? responseBody.substring(0, maxLength) : responseBody;
 
                 JsonParser jsonParser = JsonParserFactory.getJsonParser();
                 Map<String, Object> jsonResponse = jsonParser.parseMap(responseBody);
@@ -93,7 +92,6 @@ public class CurrencyConverterController {
                 Currency currencySave = new Currency();
                 currencySave.setFromCurrency(fromCurrency);
                 currencySave.setToCurrency(toCurrency);
-//                BigDecimal amountValue = new BigDecimal(String.valueOf(amount));
                 currencySave.setAmount(amount);
                 currencySave.setDate(date);
                 currencySave.setConversionResult(convertedAmount.toString());
@@ -132,44 +130,10 @@ public class CurrencyConverterController {
         return "index";
     }
 
-//        @GetMapping("/")
-//    public String index(Model model, HttpServletRequest request){
-//        model.addAttribute("pageTitle","Currency Converter Application");
-//
-//        Locale currentLocale = request.getLocale();
-//        String countryCode = currentLocale.getCountry();
-//        String countryName = currentLocale.getDisplayCountry();
-//
-//        String langCode = currentLocale.getLanguage();
-//        String langName = currentLocale.getDisplayLanguage();
-//
-//        System.out.println(countryCode + ": "+ countryName);
-//        System.out.println(langCode + ": " + langName);
-//
-//        System.out.println("----------------");
-//        String[] language = Locale.getISOLanguages();
-//
-//        for (String lang : language){
-//            Locale locale = new Locale(lang);
-////            System.out.println(lang +":"+locale.getDisplayLanguage());
-//        }
-//
-//        return "index";
-//    }
-
-//    @GetMapping("/home")
-//    public String home(){
-//        String escapedStr = "\\u0905\\u092d\\u0940 \\u0938\\u092e\\u092f \\u0939\\u0948 \\u091c\\u0928\\u0924\\u093e";
-//        String hindiText = StringEscapeUtils.unescapeJava(escapedStr);
-//        System.out.println(hindiText);
-//        return hindiText;
-////        return "home";
-//    }
-
     @GetMapping("/conversion-history")
     public String showConversionHistory(Model model, @RequestParam(name = "page", defaultValue = "1") int page){
 
-        int pageSize = 12; // Number of items per page
+        int pageSize = 10; // Number of items per page
         List<Currency> currencyList = service.getAllData();
 
         int totalItems = currencyList.size();
@@ -185,7 +149,6 @@ public class CurrencyConverterController {
         List<Currency> paginatedConversions = currencyList.subList(startIndex, endIndex);
 
         Collections.reverse(currencyList);
-//        Collections.reverse(paginatedConversions);
         model.addAttribute("paginatedConversions", paginatedConversions);
         model.addAttribute("totalPages", totalPages);
         return "history";
